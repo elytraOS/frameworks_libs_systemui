@@ -36,6 +36,8 @@ import com.android.launcher3.icons.BitmapInfo.Extender;
  */
 public class BaseIconFactory implements AutoCloseable {
 
+    public static final int CONFIG_HINT_NO_WRAP = 0x1000000;
+
     private static final String TAG = "BaseIconFactory";
     private static final int DEFAULT_WRAPPER_BACKGROUND = Color.WHITE;
     static final boolean ATLEAST_OREO = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O;
@@ -303,7 +305,8 @@ public class BaseIconFactory implements AutoCloseable {
             dr.setBounds(0, 0, 1, 1);
             boolean[] outShape = new boolean[1];
             scale = getNormalizer().getScale(icon, outIconBounds, dr.getIconMask(), outShape);
-            if (!(icon instanceof AdaptiveIconDrawable) && !outShape[0]) {
+            if (!(icon instanceof AdaptiveIconDrawable) && !outShape[0]
+                    && (icon.getChangingConfigurations() & CONFIG_HINT_NO_WRAP) == 0) {
                 ThemedIconDrawable.ThemeData themeData = null;
                 if (icon instanceof ThemedIconDrawable.ThemedBitmapIcon) {
                     themeData = ((ThemedIconDrawable.ThemedBitmapIcon) icon).mThemeData;
